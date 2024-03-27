@@ -1,0 +1,7 @@
+path: D:\VsCode\LicensePlate
+train: images\train # train images
+val: images\train # val images
+
+#classes
+names: 
+  0: licensePlate
