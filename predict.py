@@ -1,41 +1,42 @@
-import os
-import cv2
+import cv2 as cv
+from visualize import readLicensePlate
 from ultralytics import YOLO
 
 # Define the image path
-image_path = r'D:\VsCode\LicensePlate\dataset\test\images\xemay597_jpg.rf.f178bb96a2d50eb50ccb8eab78909800.jpg'
-
-# Output directory for annotated image
-output_directory = r'D:\VsCode\LicensePlate\detection_results'  
-
-# Ensure the output directory exists
-os.makedirs(output_directory, exist_ok=True)
+image_path = r'D:\VsCode\dataset(origin)\dataset\test\images\xemay581_jpg.rf.5cc25fed49cebb0f59cb884420bedb9a.jpg'
 
 # Load the YOLO model
-model_path = r'D:\VsCode\LicensePlate\runs\detect\train9\weights\last.pt'
+model_path = r'D:\VsCode\dataset(origin)\runs\detect\train9\weights\last.pt'
 model = YOLO(model_path)
 
-threshold = 0.1
+# Read image 
+image = cv.imread(image_path)
 
-# Read the image
-image = cv2.imread(image_path)
-
-# Perform inference
+# Perform inference 
 results = model(image)[0]
+for detection in results.boxes.data.tolist():
+    x1, y1, x2, y2, score, class_id = detection
 
-# Iterate over detected objects
-for result in results.boxes.data.tolist():
-    x1, y1, x2, y2, score, class_id = result
+    # Crop license plate
+    licensePlateCrop = image[int(y1):int(y2), int(x1):int(x2), :]
+    
+    # Process license plate
+    licensePlateCropGray = cv.cvtColor(licensePlateCrop, cv.COLOR_BGR2GRAY)
+    _, licensePlateCropThresh = cv.threshold(licensePlateCropGray, 110, 255, cv.THRESH_BINARY_INV)
 
-    if score > threshold:
-        cv2.rectangle(image, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
-        cv2.putText(image, results.names[int(class_id)].upper(), (int(x1), int(y1 - 10)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
+    # Read license plate
+    licensePlateText, confidenceScore = readLicensePlate(licensePlateCropThresh)
+    print(licensePlateText)
 
-# Write the annotated image to the output directory
-output_path = os.path.join(output_directory, 'annotated_image.jpg')
-cv2.imwrite(output_path, image)
-print(f'Annotated image saved: {output_path}')
-cv2.imshow("detected", image)
-cv2.waitKey(0)
+    # Draw rectangle detector
+    cv.rectangle(image, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
 
+    # Print license plate
+    cv.putText(image, licensePlateText, (int(x1), int(y1) - 10), cv.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
+
+# Display the annotated image
+cv.imshow("License Plate Detection", image)
+cv.waitKey(0)
+cv.destroyAllWindows() 
+
+    
