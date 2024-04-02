@@ -2,7 +2,7 @@ import string
 import easyocr
 
 # Initialize the OCR reader
-reader = easyocr.Reader(['en'], gpu=True)
+reader = easyocr.Reader(['en'], gpu=False)
 
 # Mapping dictionaries for character conversion
 dict_char_to_int = {'O': '0',
@@ -30,16 +30,20 @@ def checkChar(text):
     if text in string.ascii_uppercase or text in dict_int_to_char.keys():
         return True
     return False
+
 # Check if license format is correct
 def licenseFormat(text): 
     if(checkNums(text[0]) and checkNums(text[1]) and checkChar(text[2])):
         for char in text[4: ]:
-            if(checkNums(char)):
+            if(char == "-" or char == "."):
                 continue
-            else:
+            if(not checkNums(char)):
                 return False
+    else: 
+        return False;        
     return True
 
+# Read license plate
 def readLicensePlate(licensePlateCrop):
     resultLicense = ''
     scores = []
@@ -49,5 +53,8 @@ def readLicensePlate(licensePlateCrop):
         resultLicense += text
         scores.append(score)
     if(licenseFormat(resultLicense.replace(' ', ''))):
+        print(resultLicense)
         return resultLicense, scores
-    return None, None
+    else:
+        print("Plate detected: " + resultLicense)
+        return None, None
