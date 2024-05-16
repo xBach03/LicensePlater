@@ -4,6 +4,8 @@ from ultralytics import YOLO
 
 # # Define the image path
 # image_path = r'D:\VsCode\dataset(origin)\dataset\test\images\xemay1223_jpg.rf.c27d717c455451a3b01e7283324a1faf.jpg'
+# # Define the image path
+# image_path = r'D:\VsCode\dataset(origin)\dataset\test\images\xemay1223_jpg.rf.c27d717c455451a3b01e7283324a1faf.jpg'
 
 # # Load the YOLO model
 # model_path = r'D:\VsCode\LicensePlate\runs\detect\train2\weights\last.pt'
