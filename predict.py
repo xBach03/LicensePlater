@@ -64,7 +64,7 @@ def process_image(image_path, model_path):
         _, licensePlateCropThresh = cv.threshold(licensePlateCropGray, 110, 255, cv.THRESH_BINARY_INV)
 
         # Read license plate
-        licensePlateText, confidenceScore = readLicensePlate(licensePlateCropThresh)
+        licensePlateText, confidenceScore = readLicensePlate(licensePlateCrop)
 
         # Draw rectangle around detected plate
         cv.rectangle(image, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)

@@ -38,9 +38,9 @@ def home_page():
                 cv2.imwrite(result_image_path, processed_image)
 
                 if licensePlateText:
-                    return render_template("index.html", user_image=f"result_{image.filename}", rand=str(random()), msg="Upload file succeeded", ndet = 1)
+                    return render_template("index.html", user_image=f"result_{image.filename}", rand=str(random()), msg="Content from number plate was extracted", ndet = 1)
                 else:
-                    return render_template('index.html', msg='Cannot recognize number plate(s)', ndet = 0)
+                    return render_template('index.html', user_image=f"result_{image.filename}", rand=str(random()), msg="Cannot extract content from number plate", ndet = 1)
             else:
                 # If no file exists, requesting user to upload file
                 return render_template('index.html', msg='Choose file to upload', ndet = 0)
