@@ -10,7 +10,6 @@ from predict import process_image
 app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = "static"
-
 # Load YOLOv8 model with the provided absolute path
 weights_path = r"D:\VsCode\LicensePlate\runs\detect\train2\weights\best.pt"
 if not os.path.exists(weights_path):
@@ -18,8 +17,11 @@ if not os.path.exists(weights_path):
 
 yolov8_model = YOLO(weights_path)
 
+licensePlateContent = ""
+
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
+    global licensePlateContent
     if request.method == "POST":
         try:
             # Read posted file
@@ -32,6 +34,8 @@ def home_page():
 
                 # Process image and detect license plates
                 processed_image, licensePlateText = process_image(path_to_save, weights_path)
+
+                licensePlateContent = licensePlateText
 
                 # Save the image with bounding boxes
                 result_image_path = os.path.join(app.config['UPLOAD_FOLDER'], f"result_{image.filename}")
@@ -54,6 +58,9 @@ def home_page():
         # If GET -> render index page
         return render_template('index.html', ndet=0)
 
+@app.route('/get-license', methods = ['GET'])
+def get_license_plate():
+    return jsonify({"licensePlateContent": licensePlateContent})
 # @app.route('/api/detect', methods=['POST'])
 # def predict_yolov8():
 #     image = request.files.get('file')
