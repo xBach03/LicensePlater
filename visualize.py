@@ -52,9 +52,10 @@ def readLicensePlate(licensePlateCrop):
         bbox, text, score = detection
         resultLicense += text
         scores.append(score)
-    if(licenseFormat(resultLicense.replace(' ', ''))):
-        print(resultLicense)
-        return resultLicense, scores
-    else:
-        print("Plate detected: " + resultLicense)
-        return None, None
+    # if(licenseFormat(resultLicense.replace(' ', ''))):
+    #     print(resultLicense)
+    #     return resultLicense, scores
+    # else:
+    #     print("Plate detected: " + resultLicense)
+    #     return None, None    
+    return resultLicense.replace(' ', ''), scores

@@ -41,7 +41,7 @@ def home_page():
                 cv2.imwrite(result_image_path, processed_image)
 
                 if licensePlateText:
-                    return render_template("index.html", user_image=f"result_{image.filename}", rand=str(random()), msg="Content from number plate was extracted and saved", ndet = 1)
+                    return render_template("index.html", user_image=f"result_{image.filename}", rand=str(random()), msg="You are checked in!", ndet = 1)
                 else:
                     return render_template('index.html', user_image=f"result_{image.filename}", rand=str(random()), msg="Cannot extract content from number plate", ndet = 1)
             else:
