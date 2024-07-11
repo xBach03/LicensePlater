@@ -61,13 +61,15 @@ def process_image(image_path, model_path):
         
         # Process license plate
         licensePlateCropGray = cv.cvtColor(licensePlateCrop, cv.COLOR_BGR2GRAY)
-        _, licensePlateCropThresh = cv.threshold(licensePlateCropGray, 110, 255, cv.THRESH_BINARY_INV)
+        _, licensePlateCropThresh1 = cv.threshold(licensePlateCropGray, 110, 255, cv.THRESH_BINARY_INV)
+        
 
         # Read license plate
-        licensePlateText, confidenceScore = readLicensePlate(licensePlateCrop)
+        licensePlateText, confidenceScore1 = readLicensePlate(licensePlateCrop)
 
         # Draw rectangle around detected plate
         cv.rectangle(image, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
+
 
         # Print license plate
         if licensePlateText:
